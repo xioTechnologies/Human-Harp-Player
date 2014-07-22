@@ -1,0 +1,70 @@
+/*
+ * File:   Encoder.c
+ * Author: Seb Madgwick
+ */
+
+//------------------------------------------------------------------------------
+// Includes
+
+#include "Encoder.h"
+#include "SystemClock.h"
+#include "GenericTypeDefs.h"
+#include <xc.h>
+
+//------------------------------------------------------------------------------
+// Functions
+
+void EncoderInitialise() {
+    QEI1IOCbits.SWPAB = 1; // swap QEA and QEB Inputs
+    QEI1CONbits.QEIEN = 1; // Module counters are enabled
+    T6CONbits.T32 = 1; // TMR6 and TMR7 form a 32-bit timer
+    T6CONbits.TON = 1; // start timer
+}
+
+typedef union {
+    long value;
+
+    struct {
+        int lsw;
+        int msw;
+    };
+} LONG_UNION;
+
+long EncoderGetPostion() {
+    LONG_UNION position;
+    position.lsw = POS1CNTL;
+    position.msw = POS1HLD;
+    return position.value;
+}
+
+long EncoderGetVelocity() {
+    int velocityCoutner;
+    LONG_UNION interval;
+    static int direction;
+
+    // Read registers
+    asm volatile("DISI #3"); // disable all interrupts (except level 7) for 3 instructions
+    velocityCoutner = VEL1CNT;
+    interval.lsw = INT1HLDL;
+    interval.msw = INT1HLDH;
+
+    // Store direction
+    if (velocityCoutner > 0) {
+        direction = 1;
+    } else if (velocityCoutner < 0) {
+        direction = -1;
+    } else {
+        return 0;
+    }
+
+    // Calculate velocity with rounding
+    return (long) (((float) direction * (float) (FCY << 1) / (float) interval.value) + 0.5f);
+}
+
+void EncoderZero() {
+    POS1HLD = 0;
+    POS1CNTL = 0;
+}
+
+//------------------------------------------------------------------------------
+// End of file
