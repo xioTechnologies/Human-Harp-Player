@@ -17,8 +17,6 @@
 void EncoderInitialise() {
     QEI1IOCbits.SWPAB = 1; // swap QEA and QEB Inputs
     QEI1CONbits.QEIEN = 1; // Module counters are enabled
-    T6CONbits.T32 = 1; // TMR6 and TMR7 form a 32-bit timer
-    T6CONbits.TON = 1; // start timer
 }
 
 typedef union {
