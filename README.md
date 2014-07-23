@@ -22,6 +22,8 @@ Test App
 
 The Human Harp Player Test App is a cross-platform application for visualising the received data in real-time using [Processing](http://www.processing.org/).
 
+<img src="https://raw.githubusercontent.com/xioTechnologies/Human-Harp-Player/master/Test%20App/Screenshot.png"/>
+
 The Processing sketch requires the [oscP5 library](http://www.sojamo.de/libraries/oscP5/) to send and receive OSC messages.  To use this library, copy the entire *oscP5* directory (.zip available in the repository) into a directory named *"libraries"* in Processing Sketchbook location (see: *File* > *Preferences* > *Sketchbook location*).  A tutorial for sending and receiving OSC messages in Processing is available on the [codasign](http://learning.codasign.com/index.php?title=Sending_and_Receiving_OSC_Data_Using_Processing) website.
 
 **Windows 7 Firewall:**  When running the processing application for the first time you will be prompted to grant network access to Java by Windows Firewall.  Java must be given access "Public" access else network communication will not be possible.  These permission can be modified any time through *Control Panel* > *Windows Firewall* > *"Change settings"*.
