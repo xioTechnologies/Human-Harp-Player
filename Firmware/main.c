@@ -12,8 +12,9 @@
  * WDT                  SleepTimer.c
  * INT1                 Imu.c
  * INT2                 Button.c
- * Timer 1              Imu.c
+ * Timer 1              Delay.c
  * Timer 2              Led.c
+ * Timer 3              Imu.c
  * Timer 4,5            SleepTimer.c
  * Timer 6,7            Imu.c
  * Timer 8,9            Send.c
@@ -26,7 +27,7 @@
  * 7.
  * 6. I2C1 (I2C1.c)
  * 5. INT1 (Imu.c)
- * 4. TMR1 (Imu.c)
+ * 4. TMR3 (Imu.c)
  * 3. UART1 (Uart1.c)
  * 2. INT2 (Button.c)
  * 1.

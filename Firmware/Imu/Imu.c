@@ -126,12 +126,12 @@ void ImuInitialise() {
     _INT1IE = 1; // enable interrupt
 
     // Setup timer
-    T1CONbits.TCKPS = 0b01; // 1:8 prescaler
-    PR1 = (int) (FP / 8ul / 1000ul); // 1 ms period
-    T1CONbits.TON = 1; // start timer
-    _T1IP = 4; // set interrupt priority
-    _T1IF = 0; // clear interrupt flag
-    _T1IE = 1; // enable interrupt
+    T3CONbits.TCKPS = 0b01; // 1:8 prescaler
+    PR3 = (int) (FP / 8ul / 1000ul); // 1 ms period
+    T3CONbits.TON = 1; // start timer
+    _T3IP = 4; // set interrupt priority
+    _T3IF = 0; // clear interrupt flag
+    _T3IE = 1; // enable interrupt
 }
 
 static float InvSqrt(float x) { // fast inverse square-root. See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
@@ -177,7 +177,7 @@ void __attribute__((interrupt, auto_psv))_INT1Interrupt(void) {
     _INT1IF = 0; // clear interrupt flag
 }
 
-void __attribute__((interrupt, auto_psv))_T1Interrupt(void) {
+void __attribute__((interrupt, auto_psv))_T3Interrupt(void) {
     if (I2C1ScriptGetCompleteFlag()) {
         I2C1ScriptClearCompleteFlag();
 
@@ -210,7 +210,7 @@ void __attribute__((interrupt, auto_psv))_T1Interrupt(void) {
         quaternion.y *= reciprocalNorm;
         quaternion.z *= reciprocalNorm;
     }
-    _T1IF = 0; // clear interrupt flag
+    _T3IF = 0; // clear interrupt flag
 }
 
 //------------------------------------------------------------------------------
