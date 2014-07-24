@@ -15,7 +15,6 @@
 // Functions
 
 void EncoderInitialise() {
-    QEI1IOCbits.SWPAB = 1; // swap QEA and QEB Inputs
     QEI1CONbits.QEIEN = 1; // Module counters are enabled
 }
 
