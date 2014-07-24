@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 // Definitions
 
-#define SEND_FREQUENCY  100 // messages per second
+#define SEND_FREQUENCY  50 // messages per second
 #define AUXILIARY_PIN   _LATC0
 
 //------------------------------------------------------------------------------
