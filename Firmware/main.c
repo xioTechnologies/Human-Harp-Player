@@ -38,6 +38,7 @@
 
 #include "BatteryLevel/BatteryLevel.h"
 #include "Button/Button.h"
+#include "Delay/Delay.h"
 #include "Encoder/Encoder.h"
 #include "GenericTypeDefs.h"
 #include "Imu/Imu.h"
@@ -80,6 +81,9 @@ int main(void) {
 
     // Start up tasks
     SendReset();
+    Delay(50);
+    SendFirmwareVersion();
+    Delay(50);
 
     // Main loop
     while (TRUE) {

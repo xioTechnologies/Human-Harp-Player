@@ -7,10 +7,12 @@
 // Includes
 
 #include "Encoder/Encoder.h"
+#include "FirmwareVersion.h"
 #include "Imu/Imu.h"
 #include "Send.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "SystemClock.h"
 #include "Uart/Uart1.h"
 #include <xc.h>
@@ -136,6 +138,14 @@ void SendZero() {
 
 void SendSleep() {
     Uart1PutString("Sleep\r\n");
+}
+
+void SendFirmwareVersion() {
+    char string[64];
+    strcpy(string, "Firmware ");
+    strcat(string, FIRMWARE_VERSION);
+    strcat(string, "\r\n");
+    Uart1PutString(string);
 }
 
 //------------------------------------------------------------------------------
