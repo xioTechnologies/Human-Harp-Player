@@ -20,7 +20,7 @@ The Human Harp Player uses a Microchip [dsPIC33EP512GM604](http://www.microchip.
 Test App
 --------
 
-The Human Harp Player Test App is a cross-platform application for visualising measurement data (distance, velocity, azimuth, elevation and angular rate) in real-time using [Processing](http://www.processing.org/).  Messages from the Player ("Reset", "Zero", "Sleep", "Firmware: vX.X") are displayed in the output console.
+The Human Harp Player Test App is a cross-platform application for visualising measurement data (distance, velocity, azimuth, elevation and angular rate) in real-time using [Processing](http://www.processing.org/).  Messages from the Player ("Reset", "Zero", "Sleep", "Firmware: vX.X") are displayed in the output console.  Clicking the window sends a 'zero' command.
 
 <img src="https://raw.githubusercontent.com/xioTechnologies/Human-Harp-Player/master/Test%20App/Screenshot.png"/>
 
