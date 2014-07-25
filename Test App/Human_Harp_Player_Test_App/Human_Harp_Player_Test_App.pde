@@ -145,7 +145,7 @@ float mapAndClip(float value, float start1, float stop1, float start2, float sto
 
 void oscEvent(OscMessage theOscMessage) {
   String addressPattern = theOscMessage.addrPattern();
-  print(addressPattern + " ");
+  //print(addressPattern + " "); // print message for debugging
 
   // Process battery voltage
   if (addressPattern.equals("/battery")) {
@@ -162,20 +162,23 @@ void oscEvent(OscMessage theOscMessage) {
     for (int i = 0; i < blob.length; i++ ) {
       string += (char)blob[i];
     }
-    print(string);
+    //print(string); // print message for debugging
 
-    // Decode arguments
+    // Process arguments
     String values[] = split(string, ',');
-    if(values.length < 5) {
-      return;
+    if(values.length == 5) { // fetch values if measurement data
+      distance = float(values[0]);
+      velocity = float(values[1]);
+      azimuth = float(values[2]) / 100;
+      elevation = float(values[3]) / 100;
+      angularRate = float(values[4]) / 100;
     }
-    distance = float(values[0]);
-    velocity = float(values[1]);
-    azimuth = float(values[2]) / 100;
-    elevation = float(values[3]) / 100;
-    angularRate = float(values[4]) / 100;
+    else { // else print reacieved message, e.g. "Reset", "Zero", "Sleep", "Firmware: vX.X"
+      print(string);
+    }
   }
 }
 
 //------------------------------------------------------------------------------
 // End of file
+
