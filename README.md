@@ -15,12 +15,12 @@ The PCB was designed in [EAGLE Version 6.6](http://www.cadsoftusa.com/).  It was
 Firmware
 --------
 
-The Human Harp Player uses a Microchip [dsPIC33EP512GM604](http://www.microchip.com/wwwproducts/Devices.aspx?product=dsPIC33EP512GM604) 16-bit [DSC](http://en.wikipedia.org/wiki/Digital_signal_controller) running at 140 MHz (70 MIPS).  The firmware was developed using Microchip's free [MPLABX IDE v2.15](http://www.microchip.com/pagehandler/en-us/family/mplabx/) and [XC16 v1.21 C compiler](http://www.microchip.com/pagehandler/en_us/devtools/mplabxc/).  The PCB incorporates an ISCP header compatible with Microchip programming tools such as the [PICkit 3](http://www.microchip.com/Developmenttools/ProductDetails.aspx?PartNO=PG164130) or [ICD 3](http://www.microchip.com/Developmenttools/ProductDetails.aspx?PartNO=DV164035).
+The Human Harp Player uses a Microchip [dsPIC33EP512GM604](http://www.microchip.com/wwwproducts/Devices.aspx?product=dsPIC33EP512GM604) 16-bit [DSC](http://en.wikipedia.org/wiki/Digital_signal_controller) running at 140 MHz (70 MIPS).  The firmware was developed using Microchip's free [MPLABX IDE v2.15](http://www.microchip.com/pagehandler/en-us/family/mplabx/) and [XC16 v1.21 C compiler](http://www.microchip.com/pagehandler/en_us/devtools/mplabxc/).  The PCB incorporates an ICSP header compatible with Microchip programming tools such as the [PICkit 3](http://www.microchip.com/Developmenttools/ProductDetails.aspx?PartNO=PG164130) or [ICD 3](http://www.microchip.com/Developmenttools/ProductDetails.aspx?PartNO=DV164035).
 
 Test App
 --------
 
-The Human Harp Player Test App is a cross-platform application for visualising the received data in real-time using [Processing](http://www.processing.org/).
+The Human Harp Player Test App is a cross-platform application for visualising measurement data (distance, velocity, azimuth, elevation and angular rate) in real-time using [Processing](http://www.processing.org/).  Messages from the Player ("Reset", "Zero", "Sleep", "Firmware: vX.X") are displayed in the output console.
 
 <img src="https://raw.githubusercontent.com/xioTechnologies/Human-Harp-Player/master/Test%20App/Screenshot.png"/>
 
