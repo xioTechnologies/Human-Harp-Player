@@ -12,11 +12,13 @@
 // Imported libraries
 
 import oscP5.*;
+import netP5.*;
 
 //------------------------------------------------------------------------------
 // Variables
 
-OscP5 oscP5 = new OscP5(this, 8000); // must match x-OSC settings (default 8000)
+OscP5 oscP5 = new OscP5(this, 8001); // specific port of Player (8001-8012)
+NetAddress myRemoteLocation = new NetAddress("192.168.1.101", 9000); // IP address of Player (192.168.1.101-112)
 float battery, distance, velocity, azimuth, elevation, angularRate;
 String[] rowTitles = { "Distance", "Velocity", "Azimuth", "Elevation", "Angular rate" };
 float rowHeight;
@@ -138,6 +140,16 @@ float mapAndClip(float value, float start1, float stop1, float start2, float sto
     result = stop2;
   }
   return result;
+}
+
+//------------------------------------------------------------------------------
+// 'Zero' command
+
+void mousePressed() {
+  OscMessage myMessage = new OscMessage("/outputs/serial/1");
+  byte[] blob = {0};
+  myMessage.add(blob);
+  oscP5.send(myMessage, myRemoteLocation);   
 }
 
 //------------------------------------------------------------------------------

@@ -13,6 +13,7 @@
 #include "Led/Led.h"
 #include "Send/Send.h"
 #include "SleepTimer/SleepTimer.h"
+#include "Uart/Uart1.h"
 #include <xc.h>
 
 //------------------------------------------------------------------------------
@@ -40,8 +41,9 @@ void ButtonDoTasks() {
     }
     _POR = 0;
 
-    // Zero and reset sleep timer if button pressed
-    if (BUTTON_PIN) {
+    // Zero and reset sleep timer if button pressed or data received from host
+    if (BUTTON_PIN || Uart1IsGetReady() > 0) {
+        Uart1ClearRxBuffer();
         SleepTimerRestart();
         EncoderZero();
         ImuZero();
