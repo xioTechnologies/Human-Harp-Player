@@ -17,7 +17,7 @@ import oscP5.*;
 // Variables
 
 OscP5 oscP5 = new OscP5(this, 8000); // must match x-OSC settings (default 8000)
-float distance, velocity, azimuth, elevation, angularRate;
+float battery, distance, velocity, azimuth, elevation, angularRate;
 String[] rowTitles = { "Distance", "Velocity", "Azimuth", "Elevation", "Angular rate" };
 float rowHeight;
 float x = 0;
@@ -35,8 +35,8 @@ void setup() {
 }
 
 void draw() {
-  //drawBattery();
   drawDistance();
+  drawBattery(); 
   drawVelocity();
   drawAzimuth();
   drawElevation();
@@ -76,13 +76,11 @@ void drawBackground(int selectedRow) {
 }
 
 void drawBattery() {
-  int batteryWidth = 60;
-  int batteryHeight = 20;
-
-  fill(128);
-  strokeWeight(1); // rectangle border width
-  stroke(64);
-  rect(width - 10 - batteryWidth, 10, width - 10, 30);
+  PFont f = createFont("Arial", 16, true); // Arial, 16 point, anti-aliasing on
+  fill(192);
+  textAlign(RIGHT);
+  textFont(f, (int)rowHeight / 8);
+  text("Battery: " + nf(battery, 1, 2) + " V", width * 0.99, rowHeight / 8);
 }
 
 void drawDistance() {
@@ -151,8 +149,7 @@ void oscEvent(OscMessage theOscMessage) {
 
   // Process battery voltage
   if (addressPattern.equals("/battery")) {
-    // blob = theOscMessage.get(0).blobValue();
-    // print(string);
+    battery = theOscMessage.get(0).floatValue();
   }
 
   // Process serial blob
