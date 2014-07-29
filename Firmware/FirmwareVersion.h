@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 // Definitions
 
-#define FIRMWARE_VERSION "vX.X"
+#define FIRMWARE_VERSION "v1.0"
 
 #endif
 
