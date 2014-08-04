@@ -10,7 +10,7 @@ PCB
 
 The PCB was designed in [EAGLE Version 6.6](http://www.cadsoftusa.com/).  It was fabricated by [OSH Park](https://oshpark.com/) and is available to [purchase on their site](https://oshpark.com/shared_projects/F7BSWUvG).
 
-<img src="https://raw.githubusercontent.com/xioTechnologies/Human-Harp-Player/master/PCB/OSH%20Park%20Preview.png"/>
+<img src="https://raw.githubusercontent.com/xioTechnologies/Human-Harp-Player/master/PCB/Images/OSH%20Park%20Preview.png"/>
 
 Firmware
 --------
