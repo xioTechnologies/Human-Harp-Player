@@ -62,6 +62,8 @@ static volatile float sampleInterval;
 static volatile GYRO_CALIBRATED gyroDps;
 static volatile QUATERNION quaternion = {1.0f, 0.0f, 0.0f, 0.0f};
 
+static volatile BOOL highPassFilterDisabled = FALSE;
+
 //------------------------------------------------------------------------------
 // Function declarations
 
@@ -190,8 +192,10 @@ void __attribute__((interrupt, auto_psv))_T3Interrupt(void) {
         GYRO_CALIBRATED g = {DEG_TO_RAD(gyroDps.x), DEG_TO_RAD(gyroDps.y), DEG_TO_RAD(gyroDps.z)};
 
         // Adjust for convergence to alignment
-        g.y -= 2.0f * (quaternion.x * quaternion.z + quaternion.w * quaternion.y) * HIGH_PASS_FILTER_GAIN;
-        g.z += 2.0f * (quaternion.x * quaternion.y - quaternion.w * quaternion.z) * HIGH_PASS_FILTER_GAIN;
+        if (!highPassFilterDisabled) {
+            g.y -= 2.0f * (quaternion.x * quaternion.z + quaternion.w * quaternion.y) * HIGH_PASS_FILTER_GAIN;
+            g.z += 2.0f * (quaternion.x * quaternion.y - quaternion.w * quaternion.z) * HIGH_PASS_FILTER_GAIN;
+        }
 
         // Integrate to yield quaternion
         QUATERNION q = quaternion;
@@ -211,6 +215,10 @@ void __attribute__((interrupt, auto_psv))_T3Interrupt(void) {
         quaternion.z *= reciprocalNorm;
     }
     _T3IF = 0; // clear interrupt flag
+}
+
+void ImuDisableHighPassFilter() {
+    highPassFilterDisabled = TRUE;
 }
 
 //------------------------------------------------------------------------------

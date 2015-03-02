@@ -1,0 +1,19 @@
+#############
+## MPLABX
+#############
+
+**/MPLAB.X/build/
+**/MPLAB.X/debug/
+**/MPLAB.X/disassembly/
+**/MPLAB.X/dist/
+**/MPLAB.X/nbproject/private/
+**/MPLAB.X/nbproject/*.mk
+**/MPLAB.X/nbproject/*.bash
+**/MPLAB.X/nbproject/*.properties
+**/MPLAB.X/.dep.inc
+
+##################
+# Hex archive
+##################
+
+hex-archive/

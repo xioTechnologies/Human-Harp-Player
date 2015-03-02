@@ -21,6 +21,7 @@ void ImuInitialise();
 void ImuGetDirection(DIRECTION * const direction);
 float ImuGetAngularRate();
 void ImuZero();
+void ImuDisableHighPassFilter();
 
 #endif
 

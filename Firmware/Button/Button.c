@@ -36,6 +36,7 @@ void ButtonDoTasks() {
     // Disable sleep timer if button held when device switched on
     if (_POR && BUTTON_PIN) {
         SleepTimerDisable();
+        ImuDisableHighPassFilter();
         LedTriggerEvent(FAST_FLASH_FOR_3_SECONDS);
         return;
     }

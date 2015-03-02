@@ -3,6 +3,8 @@ Human-Harp-Player
 
 The Human Harp Player is a music controller based on interaction with an extendible cord under constant tension.  The Player provides measurements of the cord: extension, velocity, angle (azimuth and elevation) and angular rate (for detecting plucks).  The Player incorporates an [x-OSC](http://www.x-io.co.uk/x-osc/) to interface to host software via Wi-Fi.
 
+Counts vary between 7800 counts/m and 1000 counts/m when fully extended, average = 8900.
+
 See [Human Harp](http://humanharp.org/) for more information about the project.
 
 PCB
