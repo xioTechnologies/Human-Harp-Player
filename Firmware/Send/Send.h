@@ -11,6 +11,7 @@
 
 void SendInitialise();
 void SendDoTasks();
+void SendZero();
 void SendReset();
 void SendFirmwareVersion();
 

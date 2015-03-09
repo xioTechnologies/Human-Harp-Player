@@ -126,6 +126,10 @@ void SendDoTasks() {
 //    charArray[(*index)++] = asciiDigits[i];
 //}
 
+void SendZero() {
+    Uart1PutString("Zero\r\n");
+}
+
 void SendReset() {
     Uart1PutString("Reset\r\n");
 }

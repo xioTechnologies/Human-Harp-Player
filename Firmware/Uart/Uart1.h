@@ -1,6 +1,7 @@
-/*
- * File:   Uart1.h
- * Author: Seb Madgwick
+/**
+ * @file Uart1.h
+ * @author Seb Madgwick
+ * @brief UART library for dsPIC33EP.
  */
 
 #ifndef UART1_H
@@ -9,22 +10,26 @@
 //------------------------------------------------------------------------------
 // Includes
 
-#include <stdbool.h> // bool, true, false
+#include "stdbool.h" // bool, true, false
+#include <stddef.h> // size_t
+#include "UartCommon.h"
 
 //------------------------------------------------------------------------------
-// Function declarations
+// Function prototypes
 
-void Uart1Initialise(const long baudRate, const bool ctsRtsEnabled);
-unsigned int Uart1IsGetReady();
+void Uart1Initialise(const UartSettings * const uartSettings);
+void Uart1Disable();
+size_t Uart1IsGetReady();
 char Uart1GetChar();
-unsigned int Uart1IsPutReady();
-void Uart1PutChar(const char c);
-void Uart1PutString(const char* str);
+size_t Uart1IsPutReady();
+void Uart1PutChar(const char byte);
+int Uart1PutCharArray(const char* const source, const size_t numberOfBytes);
+void Uart1PutString(const char* string);
 void Uart1ClearRxBuffer();
 void Uart1ClearTxBuffer();
-int Uart1GetRxBufferOverrunFlag();
+bool Uart1GetRxBufferOverrunFlag();
 void Uart1ClearRxBufferOverrunFlag();
-int Uart1TxIsIdle();
+bool Uart1TxIsIdle();
 
 #endif
 

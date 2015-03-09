@@ -66,7 +66,8 @@ int main(void) {
     Initialise();
 
     // Initialise drivers and middleware modules
-    Uart1Initialise(115200, false);
+    const UartSettings uartSettings = DEFAULT_UART_SETTINGS;
+    Uart1Initialise(&uartSettings);
     EncoderInitialise();
     ImuInitialise();
 
@@ -81,7 +82,10 @@ int main(void) {
 
     // Main loop
     while (true) {
+
+        // Application tasks
         SendDoTasks();
+        ReceiveDoTasks();
     }
 }
 
