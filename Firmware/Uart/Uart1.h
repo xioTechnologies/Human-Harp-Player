@@ -9,12 +9,12 @@
 //------------------------------------------------------------------------------
 // Includes
 
-#include "GenericTypeDefs.h"
+#include <stdbool.h> // bool, true, false
 
 //------------------------------------------------------------------------------
 // Function declarations
 
-void Uart1Initialise(const long baudRate, const BOOL ctsRtsEnabled);
+void Uart1Initialise(const long baudRate, const bool ctsRtsEnabled);
 unsigned int Uart1IsGetReady();
 char Uart1GetChar();
 unsigned int Uart1IsPutReady();

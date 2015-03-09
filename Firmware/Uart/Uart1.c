@@ -34,7 +34,7 @@ static volatile unsigned int txBufferOut = 0;
 //------------------------------------------------------------------------------
 // Functions
 
-void Uart1Initialise(const long baudRate, const BOOL ctsRtsEnabled) {
+void Uart1Initialise(const long baudRate, const bool ctsRtsEnabled) {
     U1BRG = (unsigned int) (((float) FP / (4.0f * (float) baudRate) - 1.0f) + 0.5f); // calculate UxBRG for BRGH = 1 with rounding
     if (ctsRtsEnabled) {
         U1MODEbits.UEN = 0b10; // UxTX, UxRX, UxCTS and UxRTS pins are enabled and used

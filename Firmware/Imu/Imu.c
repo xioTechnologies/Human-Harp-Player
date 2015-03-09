@@ -8,7 +8,6 @@
 
 #include "BMX055.h"
 #include "Delay\Delay.h"
-#include "GenericTypeDefs.h"
 #include "I2C\I2C1.h"
 #include "Imu.h"
 #include <math.h>
@@ -28,6 +27,15 @@ typedef union {
         char msb;
     };
 } INT_UNION;
+
+typedef union {
+    unsigned long Val;
+
+    struct {
+        int LW;
+        int HW;
+    };
+} DWORD_VAL;
 
 typedef struct {
     INT_UNION x;
@@ -62,7 +70,7 @@ static volatile float sampleInterval;
 static volatile GYRO_CALIBRATED gyroDps;
 static volatile QUATERNION quaternion = {1.0f, 0.0f, 0.0f, 0.0f};
 
-static volatile BOOL highPassFilterDisabled = FALSE;
+static volatile bool highPassFilterDisabled = false;
 
 //------------------------------------------------------------------------------
 // Function declarations
@@ -176,8 +184,8 @@ void ImuZero() {
 void __attribute__((interrupt, auto_psv))_INT1Interrupt(void) {
     static DWORD_VAL previousTimer;
     DWORD_VAL timer;
-    timer.word.LW = TMR6;
-    timer.word.HW = TMR7HLD;
+    timer.LW = TMR6;
+    timer.HW = TMR7HLD;
     sampleInterval = ((float) (timer.Val - previousTimer.Val) / (float) FP);
     previousTimer = timer;
     I2C1ScriptRun(); // read sensor data
@@ -223,7 +231,7 @@ void __attribute__((interrupt, auto_psv))_T3Interrupt(void) {
 }
 
 void ImuDisableHighPassFilter() {
-    highPassFilterDisabled = TRUE;
+    highPassFilterDisabled = true;
 }
 
 //------------------------------------------------------------------------------

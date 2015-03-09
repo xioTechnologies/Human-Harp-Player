@@ -33,9 +33,9 @@
 
 #include "Delay/Delay.h"
 #include "Encoder/Encoder.h"
-#include "GenericTypeDefs.h"
 #include "Imu/Imu.h"
 #include "Send/Send.h"
+#include <stdbool.h>
 #include "SystemDefinitions.h"
 #include "Uart/Uart1.h"
 #include <xc.h>
@@ -43,10 +43,10 @@
 //------------------------------------------------------------------------------
 // Configuration Bits
 
-_FICD(JTAGEN_OFF);
-_FWDT(FWDTEN_OFF);
-_FOSC(FCKSM_CSECMD & OSCIOFNC_OFF & POSCMD_HS);
-_FOSCSEL(FNOSC_FRC & IESO_OFF);
+_FICD(JTAGEN_OFF); // JTAG is disabled
+_FWDT(FWDTEN_OFF); // Watchdog timer enabled/disabled by user software
+_FOSC(FCKSM_CSECMD & POSCMD_HS); // Clock switching is enabled,Fail-safe Clock Monitor is disabled; HS Crystal Oscillator Mode
+_FOSCSEL(FNOSC_FRC & IESO_OFF); // Internal Fast RC (FRC); Start up with user-selected oscillator source
 
 //------------------------------------------------------------------------------
 // Function declarations
@@ -66,7 +66,7 @@ int main(void) {
     Initialise();
 
     // Initialise drivers and middleware modules
-    Uart1Initialise(115200, FALSE);
+    Uart1Initialise(115200, false);
     EncoderInitialise();
     ImuInitialise();
 
@@ -80,7 +80,7 @@ int main(void) {
     Delay(50);
 
     // Main loop
-    while (TRUE) {
+    while (true) {
         SendDoTasks();
     }
 }

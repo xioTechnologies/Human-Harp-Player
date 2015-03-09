@@ -11,7 +11,6 @@
       <itemPath>../Imu/BMX055.h</itemPath>
       <itemPath>../Imu/Imu.h</itemPath>
       <itemPath>../Delay/Delay.h</itemPath>
-      <itemPath>../GenericTypeDefs.h</itemPath>
       <itemPath>../SystemDefinitions.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"

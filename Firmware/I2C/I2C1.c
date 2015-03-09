@@ -6,7 +6,6 @@
 //------------------------------------------------------------------------------
 // Includes
 
-#include "GenericTypeDefs.h"
 #include "I2C1.h"
 #include "SystemDefinitions.h"
 #include <xc.h>
@@ -30,8 +29,8 @@
 
 static int scripCmd[SCRIPT_LENGTH]; // script commands (MSB) and send data (LSB)
 static char* scripDes[SCRIPT_LENGTH]; // script destinations for received data
-static BOOL scriptIndex = FALSE; // script index
-static BOOL scriptComplete = FALSE;
+static int scriptIndex = 0; // script index
+static bool scriptComplete = false;
 
 //------------------------------------------------------------------------------
 // Functions
@@ -124,22 +123,22 @@ int I2C1ScriptWriteNack(char* const destination) {
 }
 
 void I2C1ScriptRun(void) {
-    scriptComplete = FALSE;
+    scriptComplete = false;
     scriptIndex = 0;
     _MI2C1IF = 1;
     _MI2C1IE = 1;
 }
 
-BOOL I2C1ScriptIsRunning(void) {
+bool I2C1ScriptIsRunning(void) {
     return _MI2C1IE;
 }
 
-BOOL I2C1ScriptGetCompleteFlag(void) {
+bool I2C1ScriptGetCompleteFlag(void) {
     return scriptComplete;
 }
 
 void I2C1ScriptClearCompleteFlag(void) {
-    scriptComplete = FALSE;
+    scriptComplete = false;
 }
 
 //------------------------------------------------------------------------------
@@ -168,7 +167,7 @@ void __attribute__((interrupt, auto_psv))_MI2C1Interrupt(void) {
     } else {
         _MI2C1IE = 0; // script complete, prevent further interrupts
         _PEN = 1;
-        scriptComplete = TRUE;
+        scriptComplete = true;
     }
 }
 

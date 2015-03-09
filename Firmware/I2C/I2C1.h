@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 // Includes
 
-#include "GenericTypeDefs.h"
+#include <stdbool.h>
 
 //------------------------------------------------------------------------------
 // Function declarations
@@ -33,8 +33,8 @@ int I2C1ScriptWriteReceive(void);
 int I2C1ScriptWriteAck(char* const destination);
 int I2C1ScriptWriteNack(char* const destination);
 void I2C1ScriptRun(void);
-BOOL I2C1ScriptIsRunning(void);
-BOOL I2C1ScriptGetCompleteFlag(void);
+bool I2C1ScriptIsRunning(void);
+bool I2C1ScriptGetCompleteFlag(void);
 void I2C1ScriptClearCompleteFlag(void);
 
 //------------------------------------------------------------------------------

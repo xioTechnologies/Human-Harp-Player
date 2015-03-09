@@ -8,7 +8,6 @@
 
 #include "Encoder.h"
 #include "SystemDefinitions.h"
-#include "GenericTypeDefs.h"
 #include <xc.h>
 
 //------------------------------------------------------------------------------
