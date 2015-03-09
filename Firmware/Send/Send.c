@@ -13,13 +13,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "SystemDefinitions.h"
+#include "Timer/Timer.h"
 #include "Uart/Uart1.h"
 #include <xc.h>
 
 //------------------------------------------------------------------------------
 // Definitions
 
-#define SEND_FREQUENCY  50 // messages per second
+//#define SEND_FREQUENCY  50 // messages per second
 
 //------------------------------------------------------------------------------
 // Function prototypes
@@ -30,16 +31,18 @@
 // Functions
 
 void SendInitialise() {
-    long ticksPeriod = (long) ((float) FP / (float) SEND_FREQUENCY + 0.5f);
-    PR8 = (int) (ticksPeriod & 0xFFFF);
-    PR9 = (int) (ticksPeriod >> 16);
-    T8CONbits.T32 = 1; // TMR8 and TMR9 form a 32-bit timer
-    T8CONbits.TON = 1; // start timer
+    //    long ticksPeriod = (long) ((float) FP / (float) SEND_FREQUENCY + 0.5f);
+    //    PR8 = (int) (ticksPeriod & 0xFFFF);
+    //    PR9 = (int) (ticksPeriod >> 16);
+    //    T8CONbits.T32 = 1; // TMR8 and TMR9 form a 32-bit timer
+    //    T8CONbits.TON = 1; // start timer
 }
 
 void SendDoTasks() {
-    if (_T9IF) {
-        _T9IF = 0; // clear flag
+    const Ticks32 currentTicks = TimerGetTicks32();
+    static Ticks32 previousTicks;
+    if ((currentTicks.value - previousTicks.value) >= (TIMER_TICKS_PER_SECOND / 50)) {
+        previousTicks = currentTicks;
 
         TEST_LAT = 1;
 
@@ -127,10 +130,12 @@ void SendDoTasks() {
 //}
 
 void SendZero() {
+
     Uart1PutString("Zero\r\n");
 }
 
 void SendReset() {
+
     Uart1PutString("Reset\r\n");
 }
 

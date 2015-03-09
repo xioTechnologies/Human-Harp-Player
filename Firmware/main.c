@@ -10,34 +10,31 @@
  *
  * Peripherals used:
  * INT1                 Imu.c
- * Timer 1              Delay.c
- * Timer 3              Imu.c
- * Timer 6,7            Imu.c
- * Timer 8,9            Send.c
+ * Timer 4,5            Timer.c
  * QEI1                 Encoder.c
  * I2C1                 I2C1.c
  * UART1                Uart1.c
  *
  * Interrupt priorities (nesting enabled):
  * 7.
- * 6. I2C1 (I2C1.c)
- * 5. INT1 (Imu.c)
- * 4. TMR3 (Imu.c)
- * 3. UART1 (Uart1.c)
- * 2.
+ * 6.
+ * 5. TMR5 (Timer.c)
+ * 4. I2C1 (I2C1.c)
+ * 3. INT1 (Imu.c)
+ * 2. UART1 (Uart1.c)
  * 1.
  */
 
 //------------------------------------------------------------------------------
 // Includes
 
-#include "Delay/Delay.h"
 #include "Encoder/Encoder.h"
 #include "Imu/Imu.h"
 #include "Receive/Receive.h"
 #include "Send/Send.h"
 #include <stdbool.h>
 #include "SystemDefinitions.h"
+#include "Timer/Timer.h"
 #include "Uart/Uart1.h"
 #include <xc.h>
 
@@ -67,6 +64,8 @@ int main(void) {
     Initialise();
 
     // Initialise drivers and middleware modules
+    TimerInitialise();
+
     const UartSettings uartSettings = DEFAULT_UART_SETTINGS;
     Uart1Initialise(&uartSettings);
     EncoderInitialise();
@@ -77,9 +76,9 @@ int main(void) {
 
     // Start up application tasks
     SendReset();
-    Delay(50);
+    TimerDelay(50);
     SendFirmwareVersion();
-    Delay(50);
+    TimerDelay(50);
 
     // Main loop
     while (true) {

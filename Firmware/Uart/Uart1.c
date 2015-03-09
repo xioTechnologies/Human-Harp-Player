@@ -21,7 +21,7 @@
 
 #define U1_RX_BUFFER_SIZE 1024 // must be a 2^n number, e.g. 256, 512, 1024, ...
 #define U1_TX_BUFFER_SIZE 1024 // must be a 2^n number, e.g. 256, 512, 1024, ...
-#define U1_INTERRUPT_PRIORITY 3
+#define U1_INTERRUPT_PRIORITY 2
 
 //------------------------------------------------------------------------------
 // Variables

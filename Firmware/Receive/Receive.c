@@ -7,9 +7,9 @@
 //------------------------------------------------------------------------------
 // Includes
 
-#include "Delay/Delay.h"
 #include "Encoder/Encoder.h"
 #include "Send/Send.h"
+#include "Timer/Timer.h"
 #include "Uart/Uart1.h"
 
 //------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ void ReceiveDoTasks() {
             case 'f':
             case 'F':
                 SendFirmwareVersion();
-                Delay(2000);
+                TimerDelay(2000);
                 break;
             case 'r':
             case 'R':

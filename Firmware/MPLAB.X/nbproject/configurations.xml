@@ -18,10 +18,10 @@
         <itemPath>../Uart/Uart1.h</itemPath>
       </logicalFolder>
       <itemPath>../Send/Send.h</itemPath>
-      <itemPath>../Encoder/Encoder.h</itemPath>
-      <itemPath>../Delay/Delay.h</itemPath>
       <itemPath>../SystemDefinitions.h</itemPath>
       <itemPath>../Receive/Receive.h</itemPath>
+      <itemPath>../Encoder/Encoder.h</itemPath>
+      <itemPath>../Timer/Timer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -38,9 +38,9 @@
       <itemPath>../Send/Send.c</itemPath>
       <itemPath>../Encoder/Encoder.c</itemPath>
       <itemPath>../Imu/Imu.c</itemPath>
-      <itemPath>../Delay/Delay.c</itemPath>
       <itemPath>../Main.c</itemPath>
       <itemPath>../Receive/Receive.c</itemPath>
+      <itemPath>../Timer/Timer.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -7,11 +7,11 @@
 // Includes
 
 #include "BMX055.h"
-#include "Delay\Delay.h"
 #include "I2C\I2C1.h"
 #include "Imu.h"
 #include <math.h>
 #include "SystemDefinitions.h"
+#include "Timer/Timer.h"
 #include <xc.h>
 
 //------------------------------------------------------------------------------
@@ -67,9 +67,9 @@ typedef struct {
 
 static I2CScript i2cScript;
 static void ScriptCompleteTasks();
+static Ticks64 adcTimestamp;
 
 static volatile GYRO_ADC gyroAdc;
-static volatile float sampleInterval;
 static volatile GYRO_CALIBRATED gyroDps;
 static volatile QUATERNION quaternion = {1.0f, 0.0f, 0.0f, 0.0f};
 
@@ -87,12 +87,12 @@ void ImuInitialise() {
 
     // Power cycle BMX055
     IMU_VDD_LAT = 0;
-    Delay(50);
+    TimerDelay(50);
     IMU_VDD_LAT = 1;
 
     // Initialise I2C module
     I2C1Initialise(400000);
-    Delay(10);
+    TimerDelay(10);
 
     // Setup BMX055 gyroscope
     I2C1Start();
@@ -135,17 +135,18 @@ void ImuInitialise() {
     I2CScriptAddStop(&i2cScript);
     i2cScript.scriptCompleteTasks = ScriptCompleteTasks;
 
-    // Setup timer
-    T6CONbits.T32 = 1; // TMR6 and TMR7 form a 32-bit timer
-    T6CONbits.TON = 1; // start timer
-
     // Setup INT1
-    _INT1IP = 5; // set interrupt priority
+    _INT1IP = 3; // set interrupt priority
     _INT1IF = 0; // clear interrupt flag
     _INT1IE = 1; // enable interrupt
 }
 
 static void ScriptCompleteTasks() {
+
+    // Calculate sample period
+    static Ticks32 previousTicks;
+    float samplePeriod = (float) (adcTimestamp.ticks32.value - previousTicks.value) * (1.0f / (float) TIMER_TICKS_PER_SECOND);
+    previousTicks = adcTimestamp.ticks32;
 
     // Calculate degrees per second
     gyroDps.x = (float) gyroAdc.y.value * (1.0f / 16.4f); // swap x and y axis
@@ -163,9 +164,9 @@ static void ScriptCompleteTasks() {
 
     // Integrate to yield quaternion
     QUATERNION q = quaternion;
-    g.x *= (0.5f * sampleInterval); // pre-multiply common factors
-    g.y *= (0.5f * sampleInterval);
-    g.z *= (0.5f * sampleInterval);
+    g.x *= (0.5f * samplePeriod); // pre-multiply common factors
+    g.y *= (0.5f * samplePeriod);
+    g.z *= (0.5f * samplePeriod);
     quaternion.w += (-q.x * g.x - q.y * g.y - q.z * g.z);
     quaternion.x += (q.w * g.x + q.y * g.z - q.z * g.y);
     quaternion.y += (q.w * g.y - q.x * g.z + q.z * g.x);
@@ -212,12 +213,7 @@ void ImuZero() {
 // Functions - ISRs
 
 void __attribute__((interrupt, auto_psv))_INT1Interrupt(void) {
-    static DWORD_VAL previousTimer;
-    DWORD_VAL timer;
-    timer.LW = TMR6;
-    timer.HW = TMR7HLD;
-    sampleInterval = ((float) (timer.Val - previousTimer.Val) / (float) FP);
-    previousTimer = timer;
+    adcTimestamp = TimerGetTicks64();
     I2C1RunScript(&i2cScript); // read sensor data
     _INT1IF = 0; // clear interrupt flag
 }
