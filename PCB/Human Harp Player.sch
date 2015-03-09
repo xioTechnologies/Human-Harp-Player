@@ -16723,6 +16723,8 @@ DIO-11598</description>
 <part name="SUPPLY20" library="x-io" deviceset="VSENSORS" device=""/>
 <part name="GND28" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="SUPPLY21" library="x-io" deviceset="VSENSORS" device=""/>
+<part name="GND29" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="SUPPLY22" library="x-io" deviceset="3V3" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -16773,7 +16775,7 @@ BMX055 magnetometer I2C slave address = 0x10 (because SDO1 is pulled low)</text>
 <text x="292.1" y="132.08" size="2.54" layer="97">RGB LEDs</text>
 <text x="7.62" y="7.62" size="1.778" layer="97">RB8 and RB7 are not 5V tollerant but can clamp up to 5 mA (see page 1 of DSPIC33EP512GM604 datasheet)
 RA8 (ENCODER_A) and RB4 (ENCODER_B) are 5V tolerant pins</text>
-<text x="292.1" y="7.62" size="1.778" layer="94" font="vector">Rev. 2</text>
+<text x="292.1" y="7.62" size="1.778" layer="94" font="vector">Rev. 3</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
@@ -16850,8 +16852,8 @@ RA8 (ENCODER_A) and RB4 (ENCODER_B) are 5V tolerant pins</text>
 <attribute name="VALUE" x="167.64" y="22.86" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="J4" gate="G$1" x="261.62" y="25.4" smashed="yes" rot="R180">
-<attribute name="VALUE" x="259.08" y="35.56" size="1.778" layer="96"/>
-<attribute name="NAME" x="259.08" y="38.1" size="1.778" layer="95"/>
+<attribute name="VALUE" x="261.62" y="35.56" size="1.778" layer="96"/>
+<attribute name="NAME" x="261.62" y="38.1" size="1.778" layer="95"/>
 </instance>
 <instance part="X1" gate="G$1" x="182.88" y="25.4" smashed="yes" rot="R90">
 <attribute name="NAME" x="180.34" y="15.24" size="1.778" layer="95"/>
@@ -17023,6 +17025,8 @@ RA8 (ENCODER_A) and RB4 (ENCODER_B) are 5V tolerant pins</text>
 <instance part="SUPPLY21" gate="VSENSORS" x="218.44" y="93.98" smashed="yes" rot="R270">
 <attribute name="VALUE" x="223.52" y="93.98" size="1.778" layer="96"/>
 </instance>
+<instance part="GND29" gate="1" x="254" y="12.7"/>
+<instance part="SUPPLY22" gate="3V3" x="254" y="33.02"/>
 </instances>
 <busses>
 </busses>
@@ -17050,9 +17054,10 @@ RA8 (ENCODER_A) and RB4 (ENCODER_B) are 5V tolerant pins</text>
 <pinref part="GND8" gate="1" pin="GND"/>
 </segment>
 <segment>
-<wire x1="256.54" y1="25.4" x2="251.46" y2="25.4" width="0.1524" layer="91"/>
-<label x="248.92" y="25.4" size="1.778" layer="95" rot="R180"/>
+<wire x1="256.54" y1="25.4" x2="254" y2="25.4" width="0.1524" layer="91"/>
 <pinref part="J4" gate="G$1" pin="3"/>
+<pinref part="GND29" gate="1" pin="GND"/>
+<wire x1="254" y1="15.24" x2="254" y2="25.4" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U4" gate="G$1" pin="VSS"/>
@@ -17245,13 +17250,6 @@ RA8 (ENCODER_A) and RB4 (ENCODER_B) are 5V tolerant pins</text>
 <pinref part="GND27" gate="1" pin="GND"/>
 <wire x1="200.66" y1="165.1" x2="203.2" y2="165.1" width="0.1524" layer="91"/>
 <wire x1="203.2" y1="165.1" x2="203.2" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="VDD" class="0">
-<segment>
-<wire x1="256.54" y1="27.94" x2="251.46" y2="27.94" width="0.1524" layer="91"/>
-<label x="248.92" y="27.94" size="1.778" layer="95" rot="R180"/>
-<pinref part="J4" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="MCLR" class="0">
@@ -17558,6 +17556,12 @@ RA8 (ENCODER_A) and RB4 (ENCODER_B) are 5V tolerant pins</text>
 <pinref part="R5" gate="G$1" pin="1"/>
 <wire x1="30.48" y1="71.12" x2="30.48" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="SUPPLY16" gate="3V3" pin="3V3"/>
+</segment>
+<segment>
+<wire x1="256.54" y1="27.94" x2="254" y2="27.94" width="0.1524" layer="91"/>
+<pinref part="J4" gate="G$1" pin="2"/>
+<pinref part="SUPPLY22" gate="3V3" pin="3V3"/>
+<wire x1="254" y1="33.02" x2="254" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$1" class="0">
