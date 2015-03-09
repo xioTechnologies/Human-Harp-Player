@@ -5,21 +5,20 @@
  * Test application for Human Harp Player. Displays measurements as text and
  * time-series plots.
  *
- * Tested with Processing 2.0.1 and oscP5 0.9.8
+ * Tested with Processing 2.2.1.
  */
 
 //------------------------------------------------------------------------------
 // Imported libraries
 
-import oscP5.*;
-import netP5.*;
+import processing.serial.*;
 
 //------------------------------------------------------------------------------
 // Variables
 
-OscP5 oscP5 = new OscP5(this, 8001); // specific port of Player (8001-8012)
-NetAddress myRemoteLocation = new NetAddress("192.168.1.101", 9000); // IP address of Player (192.168.1.101-112)
-float battery, distance, velocity, azimuth, elevation, angularRate;
+Serial port;
+String receivedString = "";
+float distance, velocity, azimuth, elevation, angularRate;
 String[] rowTitles = { "Distance", "Velocity", "Azimuth", "Elevation", "Angular rate" };
 float rowHeight;
 float x = 0;
@@ -29,6 +28,7 @@ int previousWidth, previousHeigth;  // used to detect window resize
 // Main functions
 
 void setup() {
+  port = new Serial(this, Serial.list()[0], 115200); // open first serial port in available list
   size(1280, 720);
   if (frame != null) {
     frame.setResizable(true);
@@ -38,7 +38,6 @@ void setup() {
 
 void draw() {
   drawDistance();
-  drawBattery(); 
   drawVelocity();
   drawAzimuth();
   drawElevation();
@@ -75,14 +74,6 @@ void drawBackground(int selectedRow) {
       text(rowTitles[i], 10, (i * rowHeight) + (0.2 * rowHeight));
     }
   }
-}
-
-void drawBattery() {
-  PFont f = createFont("Arial", 16, true); // Arial, 16 point, anti-aliasing on
-  fill(192);
-  textAlign(RIGHT);
-  textFont(f, (int)rowHeight / 8);
-  text("Battery: " + nf(battery, 1, 2) + " V", width * 0.99, rowHeight / 8);
 }
 
 void drawDistance() {
@@ -143,41 +134,32 @@ float mapAndClip(float value, float start1, float stop1, float start2, float sto
 }
 
 //------------------------------------------------------------------------------
-// 'Zero' command
+// Send commands
 
 void mousePressed() {
-  OscMessage myMessage = new OscMessage("/outputs/serial/1");
-  byte[] blob = {0};
-  myMessage.add(blob);
-  oscP5.send(myMessage, myRemoteLocation);   
+  if (mouseButton == LEFT) {
+    port.write('Z'); // 'zero'
+  } else if (mouseButton == RIGHT) {
+    port.write('R'); // reset
+  }
+  port.write('\n');
 }
 
 //------------------------------------------------------------------------------
 // OSC receive event
 
-void oscEvent(OscMessage theOscMessage) {
-  String addressPattern = theOscMessage.addrPattern();
-  //print(addressPattern + " "); // print message for debugging
+void serialEvent(Serial port) {
+  
+  // Add received byte to buffer
+  char newChar = (char)port.read();
+  receivedString += newChar;
 
-  // Process battery voltage
-  if (addressPattern.equals("/battery")) {
-    battery = theOscMessage.get(0).floatValue();
-  }
-
-  // Process serial blob
-  if (addressPattern.equals("/inputs/serial/1")) {
-
-    // Fetch string
-    byte[] blob;
-    String string = "";
-    blob = theOscMessage.get(0).blobValue();
-    for (int i = 0; i < blob.length; i++ ) {
-      string += (char)blob[i];
-    }
-    //print(string); // print message for debugging
+  // Process complete string
+  if (newChar == '\n') {
 
     // Process arguments
-    String values[] = split(string, ',');
+    //print(receivedString); // print string for debugging
+    String values[] = split(receivedString, ',');
     if(values.length == 5) { // fetch values if measurement data
       distance = float(values[0]);
       velocity = float(values[1]);
@@ -185,9 +167,12 @@ void oscEvent(OscMessage theOscMessage) {
       elevation = float(values[3]) / 100;
       angularRate = float(values[4]) / 100;
     }
-    else { // else print reacieved message, e.g. "Reset", "Zero", "Sleep", "Firmware: vX.X"
-      print(string);
+    else { // else print received message, e.g. "Reset", "Zero", "Firmware: vX.X"
+      print(receivedString);
     }
+    
+    // Flush buffer
+    receivedString = "";
   }
 }
 
