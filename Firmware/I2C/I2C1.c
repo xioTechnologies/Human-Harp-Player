@@ -8,7 +8,7 @@
 
 #include "GenericTypeDefs.h"
 #include "I2C1.h"
-#include "SystemClock.h"
+#include "SystemDefinitions.h"
 #include <xc.h>
 
 //------------------------------------------------------------------------------

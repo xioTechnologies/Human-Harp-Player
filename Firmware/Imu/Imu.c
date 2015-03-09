@@ -12,7 +12,7 @@
 #include "I2C\I2C1.h"
 #include "Imu.h"
 #include <math.h>
-#include "SystemClock.h"
+#include "SystemDefinitions.h"
 #include <xc.h>
 
 //------------------------------------------------------------------------------
@@ -73,6 +73,11 @@ static float InvSqrt(float x);
 // Functions
 
 void ImuInitialise() {
+
+    // Power cycle BMX055
+    IMU_VDD_LAT = 0;
+    Delay(50);
+    IMU_VDD_LAT = 1;
 
     // Initialise I2C module
     I2C1Initialise(400000);

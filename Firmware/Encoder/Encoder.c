@@ -7,7 +7,7 @@
 // Includes
 
 #include "Encoder.h"
-#include "SystemClock.h"
+#include "SystemDefinitions.h"
 #include "GenericTypeDefs.h"
 #include <xc.h>
 

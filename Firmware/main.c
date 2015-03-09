@@ -1,6 +1,6 @@
 /*
- * File:   main.c
- * Author: Seb Madgwick
+ * @file Main.h
+ * @author Seb Madgwick
  *
  * Device:
  * dsPIC33EP512GM604
@@ -24,7 +24,7 @@
  * 5. INT1 (Imu.c)
  * 4. TMR3 (Imu.c)
  * 3. UART1 (Uart1.c)
- * 2. INT2 (Button.c)
+ * 2.
  * 1.
  */
 
@@ -36,6 +36,7 @@
 #include "GenericTypeDefs.h"
 #include "Imu/Imu.h"
 #include "Send/Send.h"
+#include "SystemDefinitions.h"
 #include "Uart/Uart1.h"
 #include <xc.h>
 
@@ -55,18 +56,24 @@ static void Initialise(void);
 //------------------------------------------------------------------------------
 // Functions
 
+/**
+ * @brief Firmware entry point.
+ * @return This function should never return.
+ */
 int main(void) {
 
-    // Initialise dsPIC33E
+    // Initialise oscillator and I/O
     Initialise();
 
-    // Initialise modules
+    // Initialise drivers and middleware modules
     Uart1Initialise(115200, FALSE);
     EncoderInitialise();
     ImuInitialise();
+
+    // Initialise application modules
     SendInitialise();
 
-    // Start up tasks
+    // Start up application tasks
     SendReset();
     Delay(50);
     SendFirmwareVersion();
@@ -78,39 +85,12 @@ int main(void) {
     }
 }
 
+/**
+ * @brief Initialise oscillator and I/O.
+ */
 static void Initialise(void) {
 
-    // Disable analogue inputs
-    ANSELA = 0x0000;
-    ANSELB = 0x0000;
-    ANSELC = 0x0000;
-
-    // Set port latches
-    _LATA9 = 1; // RA4 is encoder enable
-    _LATB5 = 1; // RB5 is IMU enable
-    _LATB8 = 1; // RB8 is is x-OSC input 1 (U1TX)
-    _LATB9 = 1; // RB9 is x-OSC enable
-
-    // Set port directions
-    _TRISB7 = 1; // RB7 is is x-OSC output 1 (U1RX)
-    _TRISB8 = 0; // RB8 is is x-OSC input 1 (U1TX)
-    _TRISA9 = 0; // RA4 is encoder enable
-    _TRISA8 = 1; // RA8 is encoder A (QEA1)
-    _TRISB4 = 1; // RB4 is encoder B (QEB1)
-    _TRISB5 = 0; // RB5 is IMU enable
-    _TRISC4 = 1; // RC4 is IMU SDA (SDA1)
-    _TRISC5 = 1; // RC5 is IMU SCL (SCL1)
-    _TRISC3 = 1; // RC3 is IMU INT (INT1)
-    _TRISC0 = 0; // RC0 is auxiliary pin
-
-    // Map peripherals
-    _U1RXR = 39; // RB7 (RP39) is x-OSC output 1 (U1RX)
-    _RP40R = 0b000001; // RB8 (RP40) is is x-OSC input 1 (U1TX)
-    _QEA1R = 24; // RA8 (RPI24) is encoder A (QEA1)
-    _QEB1R = 36; // RB4 (RP47) is encoder B (QEB1)
-    _INT1R = 51; // RC3 (RPI51) is BMX055 INT (INT1)
-
-    // Setup oscillator for 70 MIPS with 16 MHz external crystal
+    // Configure oscillator for 70 MIPS with 16 MHz external crystal
     PLLFBD = 33; // M = 35
     CLKDIVbits.PLLPOST = 0; // N2 = 2
     CLKDIVbits.PLLPRE = 0; // N1 = 2
@@ -118,6 +98,27 @@ static void Initialise(void) {
     __builtin_write_OSCCONL(OSCCON | 0x01);
     while (OSCCONbits.COSC != 0b011); // wait for Clock switch to occur
     while (OSCCONbits.LOCK != 1); // wait for PLL to lock
+
+    // Disable analogue inputs
+    ANSELA = 0x0000;
+    ANSELB = 0x0000;
+    ANSELC = 0x0000;
+
+    // Configure encoder I/O
+    ENCODER_A_MAP();
+    ENCODER_B_MAP();
+
+    // Configure IMU I/O
+    IMU_VDD_LAT = 0;
+    IMU_VDD_TRIS = 0;
+    IMU_INT_MAP();
+
+    // Configure UART I/O
+    UART_RX_MAP();
+    UART_TX_MAP();
+
+    // Configure Test pin I/O
+    TEST_TRIS = 0;
 }
 
 //------------------------------------------------------------------------------

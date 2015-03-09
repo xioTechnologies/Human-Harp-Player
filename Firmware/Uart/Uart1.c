@@ -9,7 +9,7 @@
 // Includes
 
 #include <xc.h>
-#include "SystemClock.h"
+#include "SystemDefinitions.h"
 #include "Uart1.h"
 
 //------------------------------------------------------------------------------

@@ -5,7 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>../Uart/Uart1.h</itemPath>
-      <itemPath>../SystemClock.h</itemPath>
       <itemPath>../Send/Send.h</itemPath>
       <itemPath>../Encoder/Encoder.h</itemPath>
       <itemPath>../I2C/I2C1.h</itemPath>
@@ -13,7 +12,7 @@
       <itemPath>../Imu/Imu.h</itemPath>
       <itemPath>../Delay/Delay.h</itemPath>
       <itemPath>../GenericTypeDefs.h</itemPath>
-      <itemPath>../FirmwareVersion.h</itemPath>
+      <itemPath>../SystemDefinitions.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -22,13 +21,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>../main.c</itemPath>
       <itemPath>../Uart/Uart1.c</itemPath>
       <itemPath>../Send/Send.c</itemPath>
       <itemPath>../Encoder/Encoder.c</itemPath>
       <itemPath>../I2C/I2C1.c</itemPath>
       <itemPath>../Imu/Imu.c</itemPath>
       <itemPath>../Delay/Delay.c</itemPath>
+      <itemPath>../Main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -242,6 +241,7 @@
         <property key="UART 3" value="true"/>
         <property key="UART 4" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>

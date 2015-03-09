@@ -7,13 +7,12 @@
 // Includes
 
 #include "Encoder/Encoder.h"
-#include "FirmwareVersion.h"
 #include "Imu/Imu.h"
 #include "Send.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "SystemClock.h"
+#include "SystemDefinitions.h"
 #include "Uart/Uart1.h"
 #include <xc.h>
 
@@ -21,7 +20,6 @@
 // Definitions
 
 #define SEND_FREQUENCY  50 // messages per second
-#define AUXILIARY_PIN   _LATC0
 
 //------------------------------------------------------------------------------
 // Function declarations
@@ -43,7 +41,7 @@ void SendDoTasks() {
     if (_T9IF) {
         _T9IF = 0; // clear flag
 
-        AUXILIARY_PIN = 1;
+        TEST_LAT = 1;
 
         char string[1024];
         DIRECTION direction;
@@ -69,7 +67,7 @@ void SendDoTasks() {
         //        string[stringIndex++] = '\0';
         //        Uart1PutString(string);
 
-        AUXILIARY_PIN = 0;
+        TEST_LAT = 0;
     }
 }
 
