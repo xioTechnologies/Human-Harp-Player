@@ -34,6 +34,7 @@
 #include "Delay/Delay.h"
 #include "Encoder/Encoder.h"
 #include "Imu/Imu.h"
+#include "Receive/Receive.h"
 #include "Send/Send.h"
 #include <stdbool.h>
 #include "SystemDefinitions.h"
@@ -49,7 +50,7 @@ _FOSC(FCKSM_CSECMD & POSCMD_HS); // Clock switching is enabled,Fail-safe Clock M
 _FOSCSEL(FNOSC_FRC & IESO_OFF); // Internal Fast RC (FRC); Start up with user-selected oscillator source
 
 //------------------------------------------------------------------------------
-// Function declarations
+// Function prototypes
 
 static void Initialise(void);
 

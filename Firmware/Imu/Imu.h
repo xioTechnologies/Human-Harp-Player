@@ -15,7 +15,7 @@ typedef struct {
 } DIRECTION;
 
 //------------------------------------------------------------------------------
-// Function declarations
+// Function prototypes
 
 void ImuInitialise();
 void ImuGetDirection(DIRECTION * const direction);

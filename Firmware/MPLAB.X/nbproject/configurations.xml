@@ -4,9 +4,14 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f3" displayName="I2C" projectFiles="true">
+        <itemPath>../I2C/I2CCommon.h</itemPath>
+        <itemPath>../I2C/I2CScript.h</itemPath>
+        <itemPath>../I2C/I2C1.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2" displayName="Imu" projectFiles="true">
         <itemPath>../Imu/Imu.h</itemPath>
-        <itemPath>../Imu/BMX055.h</itemPath>
+        <itemPath>../Imu/Bmx055.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="Uart" projectFiles="true">
         <itemPath>../Uart/UartCommon.h</itemPath>
@@ -14,7 +19,6 @@
       </logicalFolder>
       <itemPath>../Send/Send.h</itemPath>
       <itemPath>../Encoder/Encoder.h</itemPath>
-      <itemPath>../I2C/I2C1.h</itemPath>
       <itemPath>../Delay/Delay.h</itemPath>
       <itemPath>../SystemDefinitions.h</itemPath>
       <itemPath>../Receive/Receive.h</itemPath>
@@ -26,10 +30,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="I2C" projectFiles="true">
+        <itemPath>../I2C/I2C1.c</itemPath>
+        <itemPath>../I2C/I2CScript.c</itemPath>
+      </logicalFolder>
       <itemPath>../Uart/Uart1.c</itemPath>
       <itemPath>../Send/Send.c</itemPath>
       <itemPath>../Encoder/Encoder.c</itemPath>
-      <itemPath>../I2C/I2C1.c</itemPath>
       <itemPath>../Imu/Imu.c</itemPath>
       <itemPath>../Delay/Delay.c</itemPath>
       <itemPath>../Main.c</itemPath>

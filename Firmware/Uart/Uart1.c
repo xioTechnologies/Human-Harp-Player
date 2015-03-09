@@ -366,7 +366,7 @@ void __attribute__((interrupt, auto_psv))_U1RXInterrupt(void) {
  */
 void __attribute__((interrupt, auto_psv))_U1TXInterrupt(void) {
     _U1TXIE = 0; // disable interrupt to avoid nested interrupt
-    _U1TXIF = 0; // clear interrupt flag   
+    _U1TXIF = 0; // clear interrupt flag
     while (!U1STAbits.UTXBF) { // repeat while hardware buffer not full
         if (txBufferOut == txBufferIn) { // if txBuffer empty
             return;

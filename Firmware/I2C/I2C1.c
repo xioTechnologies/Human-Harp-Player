@@ -1,173 +1,207 @@
-/*
- * File:   I2C.c
- * Author: Seb Madgwick
+/**
+ * @file I2C1.c
+ * @author Seb Madgwick
+ * @brief I2C master library for dsPIC33EP.
+ *
+ * Communication may be achieved using either blocking functions or by composing
+ * and then executing an interrupt serviced script.
+ *
+ * I2C1_INTERRUPT_PRIORITY may be changed as required by the application.
  */
 
 //------------------------------------------------------------------------------
 // Includes
 
 #include "I2C1.h"
-#include "SystemDefinitions.h"
+#include "I2CCommon.h"
+#include <stddef.h> // NULL
 #include <xc.h>
 
 //------------------------------------------------------------------------------
 // Definitions
 
-#define SCRIPT_LENGTH       64
-#define INTERRUPT_PRIORITY  6
-
-#define CMD_START   0b1000000000000000
-#define CMD_RESTART 0b0100000000000000
-#define CMD_STOP    0b0010000000000000
-#define CMD_SEND    0b0001000000000000
-#define CMD_RECEIVE 0b0000100000000000
-#define CMD_ACK     0b0000010000000000
-#define CMD_NACK    0b0000001000000000
+#define I2C1_INTERRUPT_PRIORITY 5
 
 //------------------------------------------------------------------------------
 // Variables
 
-static int scripCmd[SCRIPT_LENGTH]; // script commands (MSB) and send data (LSB)
-static char* scripDes[SCRIPT_LENGTH]; // script destinations for received data
-static int scriptIndex = 0; // script index
-static bool scriptComplete = false;
+static volatile I2CScript* i2cScriptAddress = NULL;
 
 //------------------------------------------------------------------------------
 // Functions
 
-void I2C1Initialise(const long baud) {
-    I2C1BRG = (int) (((float) FCY / (float) baud) - 1.0f - ((float) FCY * 0.000000130f));
-    _DISSLW = 1; // slew rate control disabled
-    _SMEN = 1; // use SMbus voltage levels
-    _ACKDT = 0; // send ACK during Acknowledge
-    _MI2C1IP = INTERRUPT_PRIORITY; // set interrupt priority
-    _I2CEN = 1; // enable I2C1
+/**
+ * @brief Initialises the I2C module.
+ *
+ * Initialises the I2C module in master mode with specified baud rate.  This
+ * function can be used to reinitialise the module with new settings if it has
+ * already been initialised.
+ *
+ * @param baud Baud rate.
+ */
+void I2C1Initialise(const uint32_t baud) {
+
+    // Ensure default register states
+    I2C1Disable();
+    PMD1bits.I2C1MD = 0; // enable peripheral
+
+    // Configure module
+    I2C1BRG = CALCULATE_I2CXBRG(baud);
+    _DISSLW = 1; // Slew rate control disabled
+    _SMEN = 1; // Enable I/O pin thresholds compliant with SMBus specification
+    _I2CEN = 1; // Enables the I2C module and configures the SDA and SCL pins as serial port pins
+    _MI2C1IP = I2C1_INTERRUPT_PRIORITY; // set interrupt priority
 }
 
-void I2C1Start(void) {
+/**
+ * @brief Disable the I2C module.
+ *
+ * I2C registers are set to their default values.  All I2C pins are controlled
+ * by PORT functions.  The peripheral is put in a minimum power consumption
+ * state.
+ */
+void I2C1Disable() {
+    I2C1CON = 0x0000;
+    I2C1STAT = 0x0000;
+    _MI2C1IE = 0; // disable interrupt
+    _MI2C1IF = 0; // clear interrupt flag
+    PMD1bits.I2C1MD = 1; // disable peripheral
+}
+
+/**
+ * @brief Execute I2C start event.  This is a blocking function.
+ */
+void I2C1Start() {
     _SEN = 1;
     while (_SEN);
 }
 
-void I2C1Stop(void) {
-    _PEN = 1;
-    while (_PEN);
-}
-
-void I2C1Restart(void) {
+/**
+ * @brief Execute I2C restart event.  This is a blocking function.
+ */
+void I2C1Restart() {
     _RSEN = 1;
     while (_RSEN);
 }
 
-void I2C1Send(char data) {
-    I2C1TRN = data;
-    while (_TRSTAT);
+/**
+ * @brief Execute I2C stop event.  This is a blocking function.
+ */
+void I2C1Stop() {
+    _PEN = 1;
+    while (_PEN);
 }
 
-char I2C1Receive(void) {
+/**
+ * @brief Execute I2C send event.  This is a blocking function.
+ * @param byte Byte to send.
+ */
+void I2C1Send(char byte) {
+    I2C1TRN = byte;
+    while (I2C1STATbits.TRSTAT);
+}
+
+/**
+ * @brief Returns true if the slave failed to acknowledge the I2C send.
+ * @return True if the slave failed to acknowledge the I2C send.
+ */
+bool I2C1AckFailed() {
+    return I2C1STATbits.ACKSTAT;
+}
+
+/**
+ * @brief Execute I2C receive event.  This is a blocking function.
+ */
+char I2C1Receive() {
     _RCEN = 1;
     while (_RCEN);
     return I2C1RCV;
 }
 
-void I2C1Ack(void) {
+/**
+ * @brief Execute I2C ACK event.  This is a blocking function.
+ */
+void I2C1Ack() {
     _ACKEN = 1;
     while (_ACKEN);
 }
 
-void I2C1Nack(void) {
+/**
+ * @brief Execute I2C NACK event.  This is a blocking function.
+ */
+void I2C1Nack() {
     _ACKDT = 1;
     I2C1Ack();
     _ACKDT = 0;
 }
 
-void I2C1ScriptEdit(const int lineNumber) {
-    scriptIndex = lineNumber;
+/**
+ * @brief Runs interrupt serviced I2C script in background.  This function will
+ * have no effect if the script if it is already running.
+ * @param i2cScript Address of I2CScript.
+ * @return 0 if successful.
+ */
+int I2C1RunScript(I2CScript * const i2cScript) {
+    if (I2C1IsScriptRunning()) {
+        return 1; // error: script is still running
+    }
+    i2cScriptAddress = i2cScript;
+    i2cScript->index = 0;
+    _MI2C1IF = 1; // set interrupt flag
+    _MI2C1IE = 1; // enable interrupt
+    return 0;
 }
 
-int I2C1ScriptWriteStart(void) {
-    scripCmd[scriptIndex] = CMD_START;
-    return scriptIndex++;
-}
-
-int I2C1ScriptWriteRestart(void) {
-    scripCmd[scriptIndex] = CMD_RESTART;
-    return scriptIndex++;
-}
-
-int I2C1ScriptWriteStop(void) {
-    scripCmd[scriptIndex] = CMD_STOP;
-    return scriptIndex++;
-}
-
-int I2C1ScriptWriteSend(const char data) {
-    scripCmd[scriptIndex] = CMD_SEND | ((int) data & 0xFF);
-    return scriptIndex++;
-}
-
-int I2C1ScriptWriteReceive(void) {
-    scripCmd[scriptIndex] = CMD_RECEIVE;
-    return scriptIndex++;
-}
-
-int I2C1ScriptWriteAck(char* const destination) {
-    scripDes[scriptIndex] = destination;
-    scripCmd[scriptIndex] = CMD_ACK;
-    return scriptIndex++;
-}
-
-int I2C1ScriptWriteNack(char* const destination) {
-    scripDes[scriptIndex] = destination;
-    scripCmd[scriptIndex] = CMD_NACK;
-    return scriptIndex++;
-}
-
-void I2C1ScriptRun(void) {
-    scriptComplete = false;
-    scriptIndex = 0;
-    _MI2C1IF = 1;
-    _MI2C1IE = 1;
-}
-
-bool I2C1ScriptIsRunning(void) {
+/**
+ * @brief Returns true if interrupt serviced I2C script is still running.
+ * @return True if interrupt serviced I2C script is still running.
+ */
+bool I2C1IsScriptRunning() {
     return _MI2C1IE;
 }
 
-bool I2C1ScriptGetCompleteFlag(void) {
-    return scriptComplete;
-}
-
-void I2C1ScriptClearCompleteFlag(void) {
-    scriptComplete = false;
-}
-
 //------------------------------------------------------------------------------
-// Functions - ISR
+// Functions - Interrupt
 
+/**
+ * I2C interrupt service routine.
+ */
 void __attribute__((interrupt, auto_psv))_MI2C1Interrupt(void) {
-    _MI2C1IF = 0;
-    int i = scriptIndex++;
-    int cmd = scripCmd[i];
-    if (cmd & CMD_RECEIVE) {
-        _RCEN = 1;
-    } else if (cmd & CMD_ACK) {
-        *scripDes[i] = I2C1RCV;
-        _ACKDT = 0;
-        _ACKEN = 1;
-    } else if (cmd & CMD_SEND) {
-        I2C1TRN = cmd;
-    } else if (cmd & CMD_RESTART) {
-        _RSEN = 1;
-    } else if (cmd & CMD_NACK) {
-        *scripDes[i] = I2C1RCV;
-        _ACKDT = 1;
-        _ACKEN = 1;
-    } else if (cmd & CMD_START) {
-        _SEN = 1;
-    } else {
-        _MI2C1IE = 0; // script complete, prevent further interrupts
-        _PEN = 1;
-        scriptComplete = true;
+    _MI2C1IF = 0; // clear interrupt flag
+    const int index = i2cScriptAddress->index++;
+    switch (i2cScriptAddress->command[index]) {
+        case I2CScriptCommandStart:
+            _SEN = 1;
+            break;
+        case I2CScriptCommandRestart:
+            _RSEN = 1;
+            break;
+        case I2CScriptCommandStop:
+            _PEN = 1;
+            break;
+        case I2CScriptCommandSend:
+            I2C1TRN = i2cScriptAddress->data[index];
+            break;
+        case I2CScriptCommandReceive:
+            _RCEN = 1;
+            break;
+        case I2CScriptCommandAck:
+            *i2cScriptAddress->destination[index] = I2C1RCV;
+            _ACKDT = 0;
+            _ACKEN = 1;
+            break;
+        case I2CScriptCommandNack:
+            *i2cScriptAddress->destination[index] = I2C1RCV;
+            _ACKDT = 1;
+            _ACKEN = 1;
+            break;
+        case I2CScriptCommandEndOfScript:
+        default:
+            _MI2C1IE = 0; // disable interrupts
+            if (i2cScriptAddress->scriptCompleteTasks != NULL) {
+                i2cScriptAddress->scriptCompleteTasks();
+            }
+            break;
     }
 }
 

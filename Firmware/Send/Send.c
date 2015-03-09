@@ -22,7 +22,7 @@
 #define SEND_FREQUENCY  50 // messages per second
 
 //------------------------------------------------------------------------------
-// Function declarations
+// Function prototypes
 
 //static void LongToAscii(char* const charArray, int* const index, long i);
 

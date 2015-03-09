@@ -62,8 +62,8 @@ typedef struct {
 /**
  * @brief Calculates ideal UXBRG value as a float for a specified baud rate and
  * defined instruction cycle clock frequency (FP).  Assumes BRGH = 0.
- * @see Page 12 of "Universal Asynchronous Receiver Transmitter (UART)" chapter
- * of "dsPIC33/PIC24 Family Reference Manual".
+ * @see Page 12 of chapter "Universal Asynchronous Receiver Transmitter (UART)"
+ * in the "dsPIC33/PIC24 Family Reference Manual".
  */
 #define CALCULATE_UXBRG_FLOAT(baudRate) ((float) FP / (4.0f * (float) baudRate) - 1.0f)
 

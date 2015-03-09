@@ -7,7 +7,7 @@
 #define DELAY_H
 
 //------------------------------------------------------------------------------
-// Function declarations
+// Function prototypes
 
 void Delay(unsigned int milliseconds);
 

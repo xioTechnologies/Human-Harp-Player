@@ -7,7 +7,7 @@
 #define ENCODER_H
 
 //------------------------------------------------------------------------------
-// Function declarations
+// Function prototypes
 
 void EncoderInitialise();
 long EncoderGetPostion();

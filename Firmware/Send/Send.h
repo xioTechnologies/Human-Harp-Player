@@ -7,7 +7,7 @@
 #define SEND_H
 
 //------------------------------------------------------------------------------
-// Function declarations
+// Function prototypes
 
 void SendInitialise();
 void SendDoTasks();
