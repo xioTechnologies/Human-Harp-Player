@@ -12,8 +12,6 @@
 void SendInitialise();
 void SendDoTasks();
 void SendReset();
-void SendZero();
-void SendSleep();
 void SendFirmwareVersion();
 
 #endif

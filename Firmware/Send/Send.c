@@ -132,14 +132,6 @@ void SendReset() {
     Uart1PutString("Reset\r\n");
 }
 
-void SendZero() {
-    Uart1PutString("Zero\r\n");
-}
-
-void SendSleep() {
-    Uart1PutString("Sleep\r\n");
-}
-
 void SendFirmwareVersion() {
     char string[64];
     strcpy(string, "Firmware ");
