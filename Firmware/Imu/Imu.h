@@ -1,6 +1,8 @@
 /*
- * File:   Imu.h
- * Author: Seb Madgwick
+ * @file Imu.h
+ * @author Seb Madgwick
+ * @brief IMU module for providing measurement of azimuth, elevation, and
+ * angular velocity norm of chord.
  */
 
 #ifndef IMU_H
@@ -12,16 +14,15 @@
 typedef struct {
     float azimuth;
     float elevation;
-} DIRECTION;
+    float angularVelocityNorm;
+} ImuMeasurement;
 
 //------------------------------------------------------------------------------
 // Function prototypes
 
 void ImuInitialise();
-void ImuGetDirection(DIRECTION * const direction);
-float ImuGetAngularRate();
+void ImuGetMeasurement(ImuMeasurement * const imuMeasurement);
 void ImuZero();
-void ImuDisableHighPassFilter();
 
 #endif
 

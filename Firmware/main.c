@@ -65,14 +65,10 @@ int main(void) {
 
     // Initialise drivers and middleware modules
     TimerInitialise();
-
-    const UartSettings uartSettings = DEFAULT_UART_SETTINGS;
-    Uart1Initialise(&uartSettings);
     EncoderInitialise();
     ImuInitialise();
-
-    // Initialise application modules
-    SendInitialise();
+    const UartSettings uartSettings = DEFAULT_UART_SETTINGS;
+    Uart1Initialise(&uartSettings);
 
     // Start up application tasks
     SendReset();

@@ -1,6 +1,7 @@
 /*
- * File:   Send.h
- * Author: Seb Madgwick
+ * @file Send.h
+ * @author Seb Madgwick
+ * @brief Application tasks and functions for sending messages.
  */
 
 #ifndef SEND_H
@@ -9,7 +10,6 @@
 //------------------------------------------------------------------------------
 // Function prototypes
 
-void SendInitialise();
 void SendDoTasks();
 void SendZero();
 void SendReset();

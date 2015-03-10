@@ -8,6 +8,7 @@
 // Includes
 
 #include "Encoder/Encoder.h"
+#include "Imu/Imu.h"
 #include "Send/Send.h"
 #include "Timer/Timer.h"
 #include "Uart/Uart1.h"
@@ -34,6 +35,7 @@ void ReceiveDoTasks() {
             case 'z':
             case 'Z':
                 EncoderZero();
+                ImuZero();
                 SendZero();
                 break;
             default:
