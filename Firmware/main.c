@@ -72,9 +72,7 @@ int main(void) {
 
     // Start up application tasks
     SendReset();
-    TimerDelay(50);
     SendFirmwareVersion();
-    TimerDelay(50);
 
     // Main loop
     while (true) {

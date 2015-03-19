@@ -346,7 +346,7 @@ bool Uart1TxIsIdle() {
 // Functions - Interrupts
 
 /**
- * UART RX interrupt service routine.
+ * @brief UART RX interrupt service routine.
  */
 void __attribute__((interrupt, auto_psv))_U1RXInterrupt(void) {
     while (U1STAbits.URXDA) { // repeat while data available
@@ -362,7 +362,7 @@ void __attribute__((interrupt, auto_psv))_U1RXInterrupt(void) {
 }
 
 /**
- * UART TX interrupt service routine.
+ * @brief UART TX interrupt service routine.
  */
 void __attribute__((interrupt, auto_psv))_U1TXInterrupt(void) {
     _U1TXIE = 0; // disable interrupt to avoid nested interrupt
