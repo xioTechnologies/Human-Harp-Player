@@ -122,6 +122,7 @@ char I2C1Receive() {
  * @brief Execute I2C ACK event.  This is a blocking function.
  */
 void I2C1Ack() {
+    _ACKDT = 0;
     _ACKEN = 1;
     while (_ACKEN);
 }
@@ -131,8 +132,8 @@ void I2C1Ack() {
  */
 void I2C1Nack() {
     _ACKDT = 1;
-    I2C1Ack();
-    _ACKDT = 0;
+    _ACKEN = 1;
+    while (_ACKEN);
 }
 
 /**

@@ -6,7 +6,7 @@
  * dsPIC33EP512GM604
  *
  * Compiler:
- * MPLAB XC16 v1.23
+ * MPLAB XC16 v1.24
  *
  * Peripherals used:
  * INT1                 Imu.c
